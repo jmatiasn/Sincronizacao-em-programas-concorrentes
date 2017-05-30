@@ -1,4 +1,4 @@
-package BanheiroUnissex;
+package BanheiroComLockECondition;
 
 import java.util.Random;
 import java.util.concurrent.Semaphore;
@@ -10,9 +10,9 @@ public class PessoaThread extends Thread {
 	//Mulher = true
 	private boolean ehMulher = false;
 	private int tempoMedioNoBanheiro = 0; //em segundos
-	private BanheiroUnissex banheiro;
+	private BanheiroComLockECondition banheiro;
 	
-	public PessoaThread(String nome, boolean ehMulher, BanheiroUnissex banheiro) {
+	public PessoaThread(String nome, boolean ehMulher, BanheiroComLockECondition banheiro) {
 		// TODO Auto-generated constructor stub
 		this.nome = nome;
 		this.ehMulher = ehMulher;
@@ -48,11 +48,11 @@ public class PessoaThread extends Thread {
 		this.tempoMedioNoBanheiro = tempoMedioNoBanheiro;
 	}
 
-	public BanheiroUnissex getBanheiro() {
+	public BanheiroComLockECondition getBanheiro() {
 		return banheiro;
 	}
 
-	public void setBanheiro(BanheiroUnissex banheiro) {
+	public void setBanheiro(BanheiroComLockECondition banheiro) {
 		this.banheiro = banheiro;
 	}
 	

@@ -1,4 +1,4 @@
-package BanheiroUnissex;
+package BanheiroComLockECondition;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -6,20 +6,18 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BanheiroUnissex {
+public class BanheiroComLockECondition {
 
 	private int MAX_PESSOAS;
-	private final Semaphore semaforo;
 	private ArrayList<PessoaThread> pessoasNoBanheiro;
 	
 	final Lock lock = new ReentrantLock();
 	final Condition naoPodeEntrar  = lock.newCondition();
 
-	public BanheiroUnissex(int MAX_PESSOAS) {
+	public BanheiroComLockECondition(int MAX_PESSOAS) {
 		// TODO Auto-generated constructor stub
 		this.MAX_PESSOAS = MAX_PESSOAS;
 		this.pessoasNoBanheiro = new ArrayList<PessoaThread>();
-		this.semaforo = new Semaphore(MAX_PESSOAS, true);
 	}
 
 	public int getMAX_PESSOAS() {
@@ -36,10 +34,6 @@ public class BanheiroUnissex {
 
 	public void setPessoasNoBanheiro(ArrayList<PessoaThread> pessoasNoBanheiro) {
 		this.pessoasNoBanheiro = pessoasNoBanheiro;
-	}
-
-	public Semaphore getSemaforo() {
-		return semaforo;
 	}
 
 	public void entrar(PessoaThread pessoa) throws InterruptedException {
@@ -59,14 +53,13 @@ public class BanheiroUnissex {
 			}
 			System.out.println(pessoa.getNome() + " : vou entrar...");
 			System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-								semaforo.availablePermits());
+								(MAX_PESSOAS - pessoasNoBanheiro.size()));
 
-			semaforo.acquire();
 			pessoasNoBanheiro.add(pessoa);
 
 			System.out.println(pessoa.getNome() + " : consegui entrar!");
 			System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-								semaforo.availablePermits());
+					(MAX_PESSOAS - pessoasNoBanheiro.size()));
 		} finally {
 			lock.unlock();
 		}
@@ -76,16 +69,15 @@ public class BanheiroUnissex {
 		lock.lock();
 		try {
 			if (pessoasNoBanheiro.contains(pessoa)) {
-				semaforo.release();
 				pessoasNoBanheiro.remove(pessoa);
 				
 				System.out.println(pessoa.getNome() + " : vou sair...");
 				System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-									semaforo.availablePermits());
+						(MAX_PESSOAS - pessoasNoBanheiro.size()));
 			}
 			if (pessoasNoBanheiro.size() == 0) {
 				System.out.println("---------" + "Banheiro liberado ---------");
-				naoPodeEntrar.signal();
+				naoPodeEntrar.signalAll();
 			}
 		} finally {
 			// TODO: handle finally clause

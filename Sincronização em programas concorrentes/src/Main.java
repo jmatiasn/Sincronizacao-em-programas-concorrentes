@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
-import BanheiroUnissex.BanheiroUnissex;
-import BanheiroUnissex.PessoaThread;
+import BanheiroComLockECondition.BanheiroComLockECondition;
+import BanheiroComLockECondition.PessoaThread;
 
 //Referências: 
 //https://www.mkyong.com/java/java-thread-mutex-and-semaphore-example/
@@ -25,7 +25,7 @@ public class Main {
 		System.out.println("Bem-vindo!");
 		System.out.println("---Menu---");
 		System.out.println("1. Uma Montanha-Russa");
-		System.out.println("2. O Banheiro Unissex");
+		System.out.println("2. O Banheiro Unissex com Lock e Condition");
 		System.out.println("---------");
 		System.out.println("Digite o número da opção desejada");
 	}
@@ -47,10 +47,10 @@ public class Main {
 	}
 
 	static void abrirBanheiroUnissex() {
-		final BanheiroUnissex banheiro = new BanheiroUnissex(10);
+		final BanheiroComLockECondition banheiro = new BanheiroComLockECondition(10);
 
 		System.out.println("Número máximo de pessoas permitido no banheiro : " + 
-		banheiro.getSemaforo().availablePermits());
+		banheiro.getMAX_PESSOAS());
 
 		PessoaThread p1 = new PessoaThread("Ana", true, banheiro);
 		p1.start();
