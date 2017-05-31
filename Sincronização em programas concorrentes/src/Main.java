@@ -1,9 +1,11 @@
 import java.util.Scanner;
+import java.util.concurrent.CyclicBarrier;
 
 import BanheiroComLockECondition.BanheiroComLockECondition;
 import BanheiroComLockECondition.PessoaThread;
 import BanheiroComSemaforo.BanheiroComSemaforo;
 import BanheiroComSemaforo.PessoaThreadComSemaforo;
+import MontanhaRussaComBarrier.RussianMountainBarrier;
 
 //Referências: 
 //https://www.mkyong.com/java/java-thread-mutex-and-semaphore-example/
@@ -26,9 +28,10 @@ public class Main {
 	static void exibirMenuInicial() {
 		System.out.println("Bem-vindo!");
 		System.out.println("---Menu---");
-		System.out.println("1. Uma Montanha-Russa");
-		System.out.println("2. O Banheiro Unissex com Lock e Condition");
-		System.out.println("3. O Banheiro Unissex com Semáforo");
+		System.out.println("1. Uma Montanha-Russa com Barreira");
+		System.out.println("2. Uma Montanha-Russa com Semáforo");
+		System.out.println("3. O Banheiro Unissex com Lock e Condition");
+		System.out.println("4. O Banheiro Unissex com Semáforo");
 		System.out.println("---------");
 		System.out.println("Digite o número da opção desejada");
 	}
@@ -37,13 +40,18 @@ public class Main {
 
 		switch (opcaoEscolhida) {
 		case "1":
-			System.out.println("Desculpa! Uma Montanha-Russa ainda não foi implementada.");
+			System.out.println("Montanha-russa com Barrier selecionada");
+			abrirMontanhaRussaComBarrier();
 			break;
 		case "2":
+			System.out.println("Montanha-russa com Semáforo selecionada");
+			//Chamar implementação 2 da montanha-russa
+			break;
+		case "3":
 			System.out.println("Banheiro Unissex com Lock e Condition selecionado");
 			abrirBanheiroUnissex();
 			break;
-		case "3":
+		case "4":
 			System.out.println("Banheiro Unissex com Semáforo selecionado");
 			abrirBanheiroUnissexSemaforo();
 			break;
@@ -51,6 +59,26 @@ public class Main {
 			System.out.println("Opção inválida! Tente novamente.");
 			break;
 		}
+	}
+	
+	static void abrirMontanhaRussaComBarrier() {
+		RussianMountainBarrier[] person = new RussianMountainBarrier[30];
+		Runnable acaoBarreira = new Runnable() {
+			public void run() {
+				try{
+					System.out.println("carro em movimento");
+					System.out.println("liberrando o carro");
+
+				}catch(Exception e){
+					e.printStackTrace();;
+				}
+			}
+		};
+		CyclicBarrier barreira = new CyclicBarrier(10, acaoBarreira);
+			for(int i =0; i < 30 ; i++){
+				person[i] = new RussianMountainBarrier(i, barreira);
+				person[i].start();
+			}
 	}
 
 	static void abrirBanheiroUnissex() {
