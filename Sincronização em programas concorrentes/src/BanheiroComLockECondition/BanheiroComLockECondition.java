@@ -35,6 +35,20 @@ public class BanheiroComLockECondition {
 	public void setPessoasNoBanheiro(ArrayList<PessoaThread> pessoasNoBanheiro) {
 		this.pessoasNoBanheiro = pessoasNoBanheiro;
 	}
+	
+	public void adicionarNaFila(PessoaThread pessoa) throws InterruptedException {
+		lock.lock();
+		try {
+			if (pessoa.isMulher()) {
+				filaMulheres.await();
+			} else {
+				filaHomens.await();
+			}
+		} finally {
+			// TODO: handle finally clause
+			lock.unlock();
+		}
+	}
 
 	public void entrar(PessoaThread pessoa) throws InterruptedException {
 		lock.lock();
@@ -52,11 +66,7 @@ public class BanheiroComLockECondition {
 					System.out.println("---------" + sexoNaoPodeEntrar + " não podem entrar---------");
 					System.out.println(pessoa.getNome() + " : não posso entrar...");
 
-					if (sexoNaoPodeEntrar == "Mulheres") {
-						filaMulheres.await();
-					} else {
-						filaHomens.await();
-					}
+					adicionarNaFila(pessoa);
 				}
 
 				// Verifica se tem vaga pra entrar
@@ -72,11 +82,7 @@ public class BanheiroComLockECondition {
 					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
 							+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
 				} else {
-					if (pessoa.isMulher()) {
-						filaMulheres.await();
-					} else {
-						filaHomens.await();
-					}
+					adicionarNaFila(pessoa);
 				}
 			}
 		} finally {
