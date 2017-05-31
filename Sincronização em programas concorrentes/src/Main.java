@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 import BanheiroComLockECondition.BanheiroComLockECondition;
 import BanheiroComLockECondition.PessoaThread;
-import BanheiroComMonitor.BanheiroComSemaforo;
-import BanheiroComMonitor.PessoaThreadComSemaforo;
+import BanheiroComSemaforo.BanheiroComSemaforo;
+import BanheiroComSemaforo.PessoaThreadComSemaforo;
 
 //Referências: 
 //https://www.mkyong.com/java/java-thread-mutex-and-semaphore-example/

@@ -74,7 +74,7 @@ public class BanheiroComLockECondition {
 				}
 
 				// Verifica se tem vaga pra entrar
-				if ((MAX_PESSOAS - pessoasNoBanheiro.size()) > 0) {
+				if (calcularVagasNoBanheiro() > 0) {
 					System.out.println(pessoa.getNome() + " : vou entrar...");
 					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
 							+ calcularVagasNoBanheiro());
