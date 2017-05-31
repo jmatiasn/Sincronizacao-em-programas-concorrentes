@@ -10,7 +10,6 @@ public class BanheiroComLockECondition {
 
 	private int MAX_PESSOAS;
 	private ArrayList<PessoaThread> pessoasNoBanheiro;
-	
 	final Lock lock = new ReentrantLock();
 	final Condition naoPodeEntrar  = lock.newCondition();
 
