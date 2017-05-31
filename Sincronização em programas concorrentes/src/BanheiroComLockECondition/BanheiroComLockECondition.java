@@ -11,7 +11,8 @@ public class BanheiroComLockECondition {
 	private int MAX_PESSOAS;
 	private ArrayList<PessoaThread> pessoasNoBanheiro;
 	final Lock lock = new ReentrantLock();
-	final Condition naoPodeEntrar  = lock.newCondition();
+	final Condition filaMulheres = lock.newCondition();
+	final Condition filaHomens = lock.newCondition();
 
 	public BanheiroComLockECondition(int MAX_PESSOAS) {
 		// TODO Auto-generated constructor stub
@@ -38,27 +39,46 @@ public class BanheiroComLockECondition {
 	public void entrar(PessoaThread pessoa) throws InterruptedException {
 		lock.lock();
 		try {
-			//Se for de sexo diferente das pessoas que estão no banheiro
-			//não entra
-			if (pessoasNoBanheiro.size() > 0 && 
-					pessoasNoBanheiro.get(0).isMulher() != pessoa.isMulher()) {
-				String sexoNaoPodeEntrar = "Homens";
-				if (pessoa.isMulher()) {
-					sexoNaoPodeEntrar = "Mulheres";
+			boolean entrei = false;
+			while (!entrei) {
+
+				// Se for de sexo diferente das pessoas que estão no banheiro
+				// não entra
+				if (pessoasNoBanheiro.size() > 0 && pessoasNoBanheiro.get(0).isMulher() != pessoa.isMulher()) {
+					String sexoNaoPodeEntrar = "Homens";
+					if (pessoa.isMulher()) {
+						sexoNaoPodeEntrar = "Mulheres";
+					}
+					System.out.println("---------" + sexoNaoPodeEntrar + " não podem entrar---------");
+					System.out.println(pessoa.getNome() + " : não posso entrar...");
+
+					if (sexoNaoPodeEntrar == "Mulheres") {
+						filaMulheres.await();
+					} else {
+						filaHomens.await();
+					}
 				}
-				System.out.println("---------" + sexoNaoPodeEntrar + " não podem entrar---------");
-				System.out.println(pessoa.getNome() + " : não posso entrar...");
-				naoPodeEntrar.await();
+
+				// Verifica se tem vaga pra entrar
+				if ((MAX_PESSOAS - pessoasNoBanheiro.size()) > 0) {
+					System.out.println(pessoa.getNome() + " : vou entrar...");
+					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
+							+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+
+					pessoasNoBanheiro.add(pessoa);
+					entrei = true;
+
+					System.out.println(pessoa.getNome() + " : consegui entrar!");
+					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
+							+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+				} else {
+					if (pessoa.isMulher()) {
+						filaMulheres.await();
+					} else {
+						filaHomens.await();
+					}
+				}
 			}
-			System.out.println(pessoa.getNome() + " : vou entrar...");
-			System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-								(MAX_PESSOAS - pessoasNoBanheiro.size()));
-
-			pessoasNoBanheiro.add(pessoa);
-
-			System.out.println(pessoa.getNome() + " : consegui entrar!");
-			System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-					(MAX_PESSOAS - pessoasNoBanheiro.size()));
 		} finally {
 			lock.unlock();
 		}
@@ -69,14 +89,21 @@ public class BanheiroComLockECondition {
 		try {
 			if (pessoasNoBanheiro.contains(pessoa)) {
 				pessoasNoBanheiro.remove(pessoa);
-				
+
 				System.out.println(pessoa.getNome() + " : vou sair...");
-				System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: " + 
-						(MAX_PESSOAS - pessoasNoBanheiro.size()));
-			}
-			if (pessoasNoBanheiro.size() == 0) {
-				System.out.println("---------" + "Banheiro liberado ---------");
-				naoPodeEntrar.signalAll();
+				System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
+						+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+				
+
+				if (pessoasNoBanheiro.size() == 0) {
+					System.out.println("---------" + "Banheiro liberado ---------");
+
+					if (pessoa.isMulher()) {
+						filaHomens.signalAll();
+					} else {
+						filaMulheres.signalAll();
+					}
+				}
 			}
 		} finally {
 			// TODO: handle finally clause

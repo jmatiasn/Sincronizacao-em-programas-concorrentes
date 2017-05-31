@@ -88,6 +88,9 @@ public class Main {
 		
 		PessoaThread p10 = new PessoaThread("Francleide", true, banheiro);
 		p10.start();
+		
+		PessoaThread p11 = new PessoaThread("Aurélio", false, banheiro);
+		p11.start();
 	}
 	
 	static void abrirBanheiroUnissexSemaforo() {
