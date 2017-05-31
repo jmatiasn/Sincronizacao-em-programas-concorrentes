@@ -49,6 +49,10 @@ public class BanheiroComLockECondition {
 			lock.unlock();
 		}
 	}
+	
+	public int calcularVagasNoBanheiro()  {
+		return MAX_PESSOAS - pessoasNoBanheiro.size();
+	}
 
 	public void entrar(PessoaThread pessoa) throws InterruptedException {
 		lock.lock();
@@ -73,14 +77,14 @@ public class BanheiroComLockECondition {
 				if ((MAX_PESSOAS - pessoasNoBanheiro.size()) > 0) {
 					System.out.println(pessoa.getNome() + " : vou entrar...");
 					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
-							+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+							+ calcularVagasNoBanheiro());
 
 					pessoasNoBanheiro.add(pessoa);
 					entrei = true;
 
 					System.out.println(pessoa.getNome() + " : consegui entrar!");
 					System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
-							+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+							+ calcularVagasNoBanheiro());
 				} else {
 					adicionarNaFila(pessoa);
 				}
@@ -98,7 +102,7 @@ public class BanheiroComLockECondition {
 
 				System.out.println(pessoa.getNome() + " : vou sair...");
 				System.out.println(pessoa.getNome() + " : vagas disponíveis no banheiro: "
-						+ (MAX_PESSOAS - pessoasNoBanheiro.size()));
+						+ calcularVagasNoBanheiro());
 				
 
 				if (pessoasNoBanheiro.size() == 0) {

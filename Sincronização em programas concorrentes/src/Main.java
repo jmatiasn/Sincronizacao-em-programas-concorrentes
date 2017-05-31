@@ -54,7 +54,8 @@ public class Main {
 	}
 
 	static void abrirBanheiroUnissex() {
-		final BanheiroComLockECondition banheiro = new BanheiroComLockECondition(10);
+		final int numVagas = 10;
+		final BanheiroComLockECondition banheiro = new BanheiroComLockECondition(numVagas);
 
 		System.out.println("Número máximo de pessoas permitido no banheiro : " + 
 		banheiro.getMAX_PESSOAS());
