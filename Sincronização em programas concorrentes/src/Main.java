@@ -1,11 +1,13 @@
 import java.util.Scanner;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 
 import BanheiroComLockECondition.BanheiroComLockECondition;
 import BanheiroComLockECondition.PessoaThread;
 import BanheiroComSemaforo.BanheiroComSemaforo;
 import BanheiroComSemaforo.PessoaThreadComSemaforo;
-import MontanhaRussaComBarrier.RussianMountainBarrier;
+import MontanhaRussaComBarrier.MontanhaRussaComBarreira;
+import MontanhaRussaComSemaforo.MontanhaRussaComSemaforo;
 
 //Referências: 
 //https://www.mkyong.com/java/java-thread-mutex-and-semaphore-example/
@@ -41,11 +43,11 @@ public class Main {
 		switch (opcaoEscolhida) {
 		case "1":
 			System.out.println("Montanha-russa com Barrier selecionada");
-			abrirMontanhaRussaComBarrier();
+			abrirMontanhaRussaComBarreira();
 			break;
 		case "2":
 			System.out.println("Montanha-russa com Semáforo selecionada");
-			//Chamar implementação 2 da montanha-russa
+			abrirMontanhaRussaComSemaforo();
 			break;
 		case "3":
 			System.out.println("Banheiro Unissex com Lock e Condition selecionado");
@@ -56,13 +58,13 @@ public class Main {
 			abrirBanheiroUnissexSemaforo();
 			break;
 		default:
-			System.out.println("Opção inválida! Tente novamente.");
+			System.out.println("Opção inválida! Execute o projeto novamente.");
 			break;
 		}
 	}
 	
-	static void abrirMontanhaRussaComBarrier() {
-		RussianMountainBarrier[] person = new RussianMountainBarrier[30];
+	static void abrirMontanhaRussaComBarreira() {
+		MontanhaRussaComBarreira[] person = new MontanhaRussaComBarreira[30];
 		Runnable acaoBarreira = new Runnable() {
 			public void run() {
 				try{
@@ -76,9 +78,22 @@ public class Main {
 		};
 		CyclicBarrier barreira = new CyclicBarrier(10, acaoBarreira);
 			for(int i =0; i < 30 ; i++){
-				person[i] = new RussianMountainBarrier(i, barreira);
+				person[i] = new MontanhaRussaComBarreira(i, barreira);
 				person[i].start();
 			}
+	}
+	
+	static void abrirMontanhaRussaComSemaforo() {
+		int semNumber = 10;
+		int numberPeoplo = 30;
+		
+		Semaphore entrada = new Semaphore(10);
+		Semaphore saida = new Semaphore(10);
+		MontanhaRussaComSemaforo[] person = new MontanhaRussaComSemaforo[numberPeoplo];
+		for(int i =0; i < numberPeoplo; i++){
+			person[i] = new MontanhaRussaComSemaforo(i, entrada, saida);
+			person[i].start();
+		}
 	}
 
 	static void abrirBanheiroUnissex() {

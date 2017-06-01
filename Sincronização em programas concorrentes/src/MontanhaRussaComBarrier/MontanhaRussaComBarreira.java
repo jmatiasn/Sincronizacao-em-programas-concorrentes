@@ -4,12 +4,12 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
-public class RussianMountainBarrier extends Thread{
+public class MontanhaRussaComBarreira extends Thread{
 	private CyclicBarrier barreira;
 	private int id;
 	
 	
-	public RussianMountainBarrier(int id, CyclicBarrier barrier){
+	public MontanhaRussaComBarreira(int id, CyclicBarrier barrier){
 		this.id = id;
 		this.barreira = barrier;
 	}
