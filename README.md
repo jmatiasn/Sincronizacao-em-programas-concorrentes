@@ -1,4 +1,4 @@
-# Trabalho-pratico-Sincronizacao-em-programas-concorrentes
+# Sincronizacao-em-programas-concorrentes
 
 Contribuições
 
